@@ -153,9 +153,16 @@ function listUnopenedBattlepacks(){
 /**
  * Opens the given battlepacks
  * @param battlepacks array of battlepack objects, all of which should be unopened
- * @return list of unprojected battlepack objects with all fields intact
+ * @return list of battlepack object promises, which have a state and a value or reason (depending on whether their state is fulfilled or rejected)
  */
 function openBattlepacks(unopenedBattlepacks){
+    if(unopenedBattlepacks.length){
+        console.info("Opening "+unopenedBattlepacks+" battlepacks...");
+    } else {
+        console.info("All of your battlepacks are already open.");
+        return [];
+    }
+
     return Q.allSettled(unopenedBattlepacks.map(function(battlepack){
         return Q.promise(function(resolve, reject){
             request({
@@ -200,8 +207,10 @@ function openBattlepacks(unopenedBattlepacks){
 function reportResults(battlepackOpenResults){
     var openResultsGroupedByState = _.groupBy(battlepackOpenResults, "state");
 
-    console.info(openResultsGroupedByState["fulfilled"].length + " battlepacks opened successfully.");
-    
+    if(openResultsGroupedByState["fulfilled"]){
+        console.info(openResultsGroupedByState["fulfilled"].length + " battlepacks opened successfully.");
+    }
+
     if(openResultsGroupedByState["rejected"]){
         console.error(openResultsGroupedByState["rejected"].length+" battlepacks failed to open.");
     }
