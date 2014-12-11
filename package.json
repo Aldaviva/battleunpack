@@ -1,0 +1,19 @@
+{
+	"name": "battleunpack",
+	"author": "Ben Hutchison <ben@aldaviva.com>",
+	"version": "0.0.0",
+    "description": "Automatically open all of your Battlefield 4 battlepacks, instead of manually giving yourself RSI.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Aldaviva/battleunpack.git"
+    },
+	"dependencies": {
+        "email-addresses" : "2.0.1",
+        "event-stream"    : "3.1.7",
+        "JSONStream"      : "0.10.0",
+        "lodash"          : "2.4.1",
+        "prompt"          : "0.2.14",
+        "q"               : "1.1.2",
+        "request"         : "2.51.0"
+	}
+}
