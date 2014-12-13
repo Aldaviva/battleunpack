@@ -9,12 +9,10 @@ Automatically open all of your Battlefield 4 battlepacks, instead of manually gi
 - [Node and NPM](http://nodejs.org/download/)
 
 ## Installation
-    $ git clone https://github.com/Aldaviva/battleunpack.git
-    $ cd battleunpack
-    $ npm install
+    $ npm install battleunpack
 
 ## Usage
-    $ node .
+    $ node node_modules/battleunpack
     Origin Account e-mail: (type your Origin email here)
     Password: (type your Origin password here, it will not be echoed)
     Opening 27 battlepacks...
