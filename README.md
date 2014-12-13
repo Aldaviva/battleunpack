@@ -16,6 +16,6 @@ Automatically open all of your Battlefield 4 battlepacks, instead of manually gi
 ## Usage
     $ node .
     Origin Account e-mail: (type your Origin email here)
-    Password: (will not be echoed)
-    Opening 4 battlepacks...
-    4 battlepacks opened successfully.
+    Password: (type your Origin password here, it will not be echoed)
+    Opening 27 battlepacks...
+    27 battlepacks opened successfully.

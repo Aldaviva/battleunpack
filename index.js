@@ -18,6 +18,14 @@ var DEFAULT_HEADERS = {
 var auth = {};
 var cookieJar = request.jar();
 
+// request = request.defaults({
+//     proxy: "http://localhost:8888",
+//     strictSSL: false,
+//     agentOptions: {
+//         rejectUnauthorized: false
+//     }
+// });
+
 function main(){
     Q.try(getCredentials)
         .then(logIn)
@@ -26,6 +34,7 @@ function main(){
         .then(reportResults)
         .fail(function(err){
             console.error("Unable to open battlepacks:", err.message);
+            err.stack && console.error(err.stack);
             console.error();
         });
 }
@@ -85,7 +94,7 @@ function logIn(credentials){
                 email: credentials.email,
                 password: credentials.password,
                 clientId: "",
-                pushId: "", //hopefully this isn't needed
+                pushId: "",
                 bundleId: "com.ea.bf3bl.inc",
                 bundleVersion: "243",
                 deviceName: "Nexus7",
@@ -131,6 +140,7 @@ function listUnopenedBattlepacks(){
 
     request({
         url: "https://battlelog.battlefield.com/bf4/mobile/getbattlepacks",
+        method: "POST",
         headers: _.extend({
             "X-Session-Id": auth.sessionId
         }, DEFAULT_HEADERS),
@@ -141,13 +151,19 @@ function listUnopenedBattlepacks(){
             platform: "64",
             timestamp: new Date().getTime()
         }
-    }).pipe(JSONStream.parse("data.packs", function(pack){
+    })
+    .pipe(JSONStream.parse("data.packs.*", function(pack){
         return (pack.openedAt === 0)
             ? { packId: pack.packId }
             : null;
-    })).pipe(eventStream.writeArray(deferred.makeNodeResolver()));
+    }))
+    .pipe(eventStream.writeArray(deferred.makeNodeResolver()));
 
-    return deferred.promise;
+    return deferred.promise
+        .fail(function(err){
+            console.error("failed to list unopened battlepacks", err);
+            throw err;
+        });
 }
 
 /**
@@ -157,7 +173,7 @@ function listUnopenedBattlepacks(){
  */
 function openBattlepacks(unopenedBattlepacks){
     if(unopenedBattlepacks.length){
-        console.info("Opening "+unopenedBattlepacks+" battlepacks...");
+        console.info("Opening "+unopenedBattlepacks.length+" battlepacks...");
     } else {
         console.info("All of your battlepacks are already open.");
         return [];
